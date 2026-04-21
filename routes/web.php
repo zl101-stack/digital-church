@@ -23,7 +23,7 @@ Route::get('/auto-logout', function () {
     request()->session()->regenerateToken();
 });
 
-/*  HARUS LOGIN */
+/* 🔐 HARUS LOGIN */
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', function () {
