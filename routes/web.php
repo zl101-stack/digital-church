@@ -11,7 +11,7 @@ use App\Models\Donation;
 
 require __DIR__ . '/auth.php';
 
-/* HOMEee */
+/* HOME */
 Route::get('/', function () {
     $services = Service::latest()->get();
     return view('home', compact('services'));
