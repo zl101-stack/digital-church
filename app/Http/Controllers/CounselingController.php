@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class CounselingController extends Controller
 {
-    //  TAMPIL DATA tes
+    //  TAMPIL DATA
     public function index()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
