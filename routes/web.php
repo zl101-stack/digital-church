@@ -22,7 +22,6 @@ Route::get('/auto-logout', function () {
     request()->session()->invalidate();
     request()->session()->regenerateToken();
 });
-// tes
 
 /* 🔐 HARUS LOGIN */
 Route::middleware(['auth'])->group(function () {
