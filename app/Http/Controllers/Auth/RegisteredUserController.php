@@ -25,27 +25,31 @@ class RegisteredUserController extends Controller
 
     /**
      * Handle an incoming registration request.
-     *
-     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
+        // 🔹 VALIDASI
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // 🔥 CREATE USER (ROLE = USER)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // 🔥 WAJIB
         ]);
 
+        // 🔹 EVENT REGISTER
         event(new Registered($user));
 
+        // 🔹 AUTO LOGIN
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // 🔥 REDIRECT KE HALAMAN JEMAAT
+        return redirect('/home');
     }
 }
