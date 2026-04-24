@@ -11,44 +11,57 @@ use App\Models\Donation;
 
 require __DIR__ . '/auth.php';
 
-/* 🔥 ROOT → LANGSUNG KE LOGIN */
+/*  ROOT → LOGIN */
 Route::get('/', function () {
     return redirect('/login');
 });
 
-/* 🔐 HARUS LOGIN */
-Route::middleware(['auth'])->group(function () {
 
-    /* 🔥 DASHBOARD (ROLE BASED) */
-    Route::get('/dashboard', function () {
+/*  DASHBOARD REDIRECT (PENTING) */
+Route::get('/dashboard', function () {
 
-        if (auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin') {
+    if (auth()->user()->role === 'user') {
+        return redirect()->route('user.home');
+    }
 
-            return view('admin.dashboard', [
-                'totalServices' => Service::count(),
-                'totalDonations' => Donation::sum('amount'),
-            ]);
+    return redirect()->route('admin.dashboard');
+})->middleware('auth');
 
-        } else {
 
-            return view('user.home');
-        }
+/*  LOGOUT */
+Route::middleware('auth')->get('/auto-logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
 
-    })->name('dashboard');
+    return redirect('/login');
+});
 
-    /* 🔥 LOGOUT */
-    Route::get('/auto-logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
 
-        return redirect('/login');
-    });
+/* 🔹 USER */
+Route::middleware(['auth', 'role:user'])->get('/user/home', function () {
+    return view('user.home');
+})->name('user.home');
 
-    /* 🔥 RESOURCE */
+
+/* 🔹 ADMIN + SUPERADMIN DASHBOARD */
+Route::middleware(['auth', 'role:admin,superadmin'])->get('/admin/dashboard', function () {
+    return view('admin.dashboard', [
+        'totalServices' => Service::count(),
+        'totalDonations' => Donation::sum('amount'),
+    ]);
+})->name('admin.dashboard');
+
+
+/*  ADMIN + SUPERADMIN */
+Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
     Route::resource('services', ServiceController::class);
-    Route::resource('donations', DonationController::class);
     Route::resource('counseling', CounselingController::class);
-    Route::resource('service-registrations', ServiceRegistrationController::class);
+});
 
+
+/*  SUPERADMIN ONLY */
+Route::middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::resource('donations', DonationController::class);
+    Route::resource('service-registrations', ServiceRegistrationController::class);
 });

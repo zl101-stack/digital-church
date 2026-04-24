@@ -50,6 +50,58 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // 🔥 REDIRECT KE HALAMAN JEMAAT
-        return redirect('/home');
+        return redirect('/user/home');
+    }
+
+    /* ================= ADMIN ================= */
+
+    public function createAdmin(): View
+    {
+        return view('auth.register');
+    }
+
+    public function storeAdmin(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'admin',
+        ]);
+
+        return redirect('/login');
+    }
+
+    public function createSuperAdmin(): View
+    {
+        return view('auth.register');
+    }
+    public function storeSuperAdmin(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'secret_key' => ['required'],
+        ]);
+
+        if ($request->secret_key !== env('SUPERADMIN_SECRET')) {
+            return back()->withErrors(['secret_key' => 'Kode salah']);
+        }
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'superadmin',
+        ]);
+
+        return redirect('/login');
     }
 }

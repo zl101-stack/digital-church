@@ -17,6 +17,14 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
+    // REGISTER ADMIN (HIDDEN)
+    Route::get('daftar-admin-xyz123', [RegisteredUserController::class, 'createAdmin']);
+    Route::post('daftar-admin-xyz123', [RegisteredUserController::class, 'storeAdmin']);
+
+    // REGISTER SUPERADMIN (optional kalau sudah buat)
+    Route::get('daftar-superadmin-abc999', [RegisteredUserController::class, 'createSuperAdmin']);
+    Route::post('daftar-superadmin-abc999', [RegisteredUserController::class, 'storeSuperAdmin']);
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
