@@ -23,7 +23,7 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form action="/service-registrations" method="POST">
+            <form action="{{ route('user.pelayanan.store') }}" method="POST">
                 @csrf
 
                 <input type="text" name="name" class="form-control mb-2" placeholder="Nama Jemaat" required>
@@ -54,8 +54,9 @@
             <tr>
                 <th>Nama</th>
                 <th>Jadwal</th>
-                <th>Aksi</th>
                 <th>Posisi</th>
+                <th>Aksi</th>
+                
             </tr>
         </thead>
         <tbody>

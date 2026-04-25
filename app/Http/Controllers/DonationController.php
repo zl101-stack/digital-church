@@ -82,4 +82,27 @@ class DonationController extends Controller
         $donation->delete();
         return redirect()->back();
     }
+
+    public function userForm()
+    {
+        return view('user.donation');
+    }
+
+    public function userStore(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1000',
+            'note' => 'nullable|max:255',
+        ]);
+
+        Donation::create([
+            'user_id' => auth()->id(),
+            'amount' => $request->amount,
+            'note' => $request->note,
+            'date' => now(),
+            'is_anonymous' => $request->has('is_anonymous'),
+        ]);
+
+        return redirect()->back()->with('success', 'Terima kasih, donasi berhasil dikirim.');
+    }
 }

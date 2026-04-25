@@ -2,33 +2,23 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\ServiceRegistrationController;
+use App\Http\Controllers\UserController;
+
 use App\Models\Service;
 use App\Models\Donation;
 
 require __DIR__ . '/auth.php';
 
-/*  ROOT → LOGIN */
-Route::get('/', function () {
-    return redirect('/login');
-});
+/* ROOT */
+Route::get('/', fn() => redirect('/login'));
 
 
-/*  DASHBOARD REDIRECT (PENTING) */
-Route::get('/dashboard', function () {
-
-    if (auth()->user()->role === 'user') {
-        return redirect()->route('user.home');
-    }
-
-    return redirect()->route('admin.dashboard');
-})->middleware('auth');
-
-
-/*  LOGOUT */
+/* LOGOUT */
 Route::middleware('auth')->get('/auto-logout', function () {
     Auth::logout();
     request()->session()->invalidate();
@@ -38,30 +28,108 @@ Route::middleware('auth')->get('/auto-logout', function () {
 });
 
 
-/* 🔹 USER */
-Route::middleware(['auth', 'role:user'])->get('/user/home', function () {
-    return view('user.home');
-})->name('user.home');
+/* DASHBOARD REDIRECT */
+Route::middleware('auth')->get('/dashboard', function () {
 
-
-/* 🔹 ADMIN + SUPERADMIN DASHBOARD */
-Route::middleware(['auth', 'role:admin,superadmin'])->get('/admin/dashboard', function () {
-    return view('admin.dashboard', [
-        'totalServices' => Service::count(),
-        'totalDonations' => Donation::sum('amount'),
-    ]);
-})->name('admin.dashboard');
-
-
-/*  ADMIN + SUPERADMIN */
-Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
-    Route::resource('services', ServiceController::class);
-    Route::resource('counseling', CounselingController::class);
+    return match (auth()->user()->role) {
+        'user' => redirect()->route('user.home'),
+        'admin' => redirect()->route('admin.dashboard'),
+        default => redirect()->route('superadmin.dashboard'),
+    };
 });
 
 
-/*  SUPERADMIN ONLY */
+/* ===================================
+   USER
+=================================== */
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+    Route::get('/user/home', function () {
+        return view('user.home');
+    })->name('user.home');
+
+    Route::get('/user/services', [ServiceController::class, 'userIndex'])
+        ->name('user.services');
+
+    Route::get('/user/donation', [DonationController::class, 'userForm'])
+        ->name('user.donation');
+
+    Route::post('/user/donation', [DonationController::class, 'userStore'])
+        ->name('user.donation.store');
+
+    Route::get('/user/pelayanan', [ServiceRegistrationController::class, 'myService'])
+        ->name('user.pelayanan');
+
+    Route::post('/user/pelayanan', [ServiceRegistrationController::class, 'store'])
+        ->name('user.pelayanan.store');
+});
+
+
+/* ===================================
+   ADMIN
+=================================== */
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard', [
+            'totalServices' => Service::count(),
+            'totalDonations' => Donation::sum('amount'),
+        ]);
+    })->name('admin.dashboard');
+});
+
+
+/* ===================================
+   SUPERADMIN
+=================================== */
+
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
+
+    Route::get('/superadmin/dashboard', function () {
+        return view('superadmin.users.dashboard', [
+            'totalServices' => Service::count(),
+            'totalDonations' => Donation::sum('amount'),
+        ]);
+    })->name('superadmin.dashboard');
+});
+
+
+/* ===================================
+   ADMIN + SUPERADMIN
+=================================== */
+
+Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
+
+    Route::resource('services', ServiceController::class);
+
+    Route::resource('counseling', CounselingController::class);
+
     Route::resource('donations', DonationController::class);
+
     Route::resource('service-registrations', ServiceRegistrationController::class);
 });
+
+
+/* ===================================
+   USER MANAGEMENT
+=================================== */
+
+/* Admin */
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('users', UserController::class);
+    });
+
+/* Superadmin */
+Route::middleware(['auth', 'role:superadmin'])
+    ->prefix('superadmin')
+    ->name('superadmin.')
+    ->group(function () {
+
+        Route::resource('users', UserController::class);
+    });

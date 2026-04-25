@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Digital Church</title>
@@ -10,6 +11,7 @@
     <!-- Optional: Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
+
 <body>
 
     <!-- NAVBAR -->
@@ -25,25 +27,39 @@
                 <ul class="navbar-nav ms-auto">
 
                     @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
 
-                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
-                            <li class="nav-item">
-                                <a class="nav-link" href="/services">Services</a>
-                            </li>
-                        @endif
+                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+                    @endif
 
-                        @if(auth()->user()->role === 'superadmin')
-                            <li class="nav-item">
-                                <a class="nav-link" href="/donations">Donations</a>
-                            </li>
-                        @endif
+                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('service-registrations.index') }}">
+                            Pelayanan
+                        </a>
+                    </li>
+                    @endif
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auto-logout">Logout</a>
-                        </li>
+                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="/counseling">Counseling</a>
+                    </li>
+                    @endif
+
+                    @if(auth()->user()->role === 'superadmin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="/donations">Donations</a>
+                    </li>
+                    @endif
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auto-logout">Logout</a>
+                    </li>
                     @endauth
 
                 </ul>
@@ -60,4 +76,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

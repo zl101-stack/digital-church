@@ -152,14 +152,14 @@
             </div>
         </div>
 
-        <!-- Pelayanan  -->
+        <!-- pelayanan -->
         <div class="col-md-4 mb-4">
             <div class="card text-white bg-primary card-hover">
                 <div class="card-body">
                     <h5 class="card-title">🙋 Pendaftaran Pelayanan</h5>
                     <p>Lihat jemaat yang mendaftar pelayanan</p>
                     <a href="{{ route('service-registrations.index') }}" class="btn btn-light mt-2">
-                        Lihat Data pelayanan
+                        Lihat Pelayanan
                     </a>
                 </div>
             </div>
@@ -194,23 +194,13 @@
         </div>
 
         <!-- 🔥 SUPERADMIN ONLY -->
-        @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
+        @if(auth()->user()->role === 'superadmin')
         <div class="col-md-4 mb-4">
             <div class="card text-white bg-danger card-hover">
                 <div class="card-body">
                     <h5 class="card-title">👑 Kelola User</h5>
-
-                    @if(auth()->user()->role == 'admin')
-                    <p>Kelola user jemaat</p>
-                    @else
                     <p>Atur user & admin</p>
-                    @endif
-
-                    <a href="{{ auth()->user()->role == 'admin'
-                            ? route('admin.users.index')
-                            : route('superadmin.users.index') }}"
-                        class="btn btn-light mt-2">
-
+                    <a href="{{ route('superadmin.users.index') }}" class="btn btn-light mt-2">
                         Kelola
                     </a>
                 </div>
