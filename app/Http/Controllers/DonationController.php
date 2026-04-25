@@ -31,12 +31,14 @@ class DonationController extends Controller
      */
     public function store(Request $request)
     {
+        $isAnonymous = $request->has('is_anonymous');
+
         Donation::create([
-            'user_id' => auth()->id(),
+            'user_id' => $isAnonymous ? null : auth()->id(), // ✅ FIX
             'amount' => $request->amount,
             'note' => $request->note,
             'date' => now(),
-            'is_anonymous' => $request->has('is_anonymous'),
+            'is_anonymous' => $isAnonymous,
         ]);
 
         return redirect()->back();
@@ -83,11 +85,17 @@ class DonationController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Form user (frontend user)
+     */
     public function userForm()
     {
         return view('user.donation');
     }
 
+    /**
+     * Store dari user
+     */
     public function userStore(Request $request)
     {
         $request->validate([
@@ -95,12 +103,14 @@ class DonationController extends Controller
             'note' => 'nullable|max:255',
         ]);
 
+        $isAnonymous = $request->has('is_anonymous');
+
         Donation::create([
-            'user_id' => auth()->id(),
+            'user_id' => $isAnonymous ? null : auth()->id(), // ✅ FIX
             'amount' => $request->amount,
             'note' => $request->note,
             'date' => now(),
-            'is_anonymous' => $request->has('is_anonymous'),
+            'is_anonymous' => $isAnonymous,
         ]);
 
         return redirect()->back()->with('success', 'Terima kasih, donasi berhasil dikirim.');

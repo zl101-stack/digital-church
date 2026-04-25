@@ -78,6 +78,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             'totalDonations' => Donation::sum('amount'),
         ]);
     })->name('admin.dashboard');
+
+    // 🔥 TAMBAHAN (INI FIX UTAMA)
+    Route::get('/admin/pelayanan', [ServiceRegistrationController::class, 'index'])
+        ->name('admin.pelayanan');
 });
 
 

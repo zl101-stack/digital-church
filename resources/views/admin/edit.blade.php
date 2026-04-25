@@ -40,10 +40,6 @@
                             User
                         </option>
 
-                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>
-                            Admin
-                        </option>
-
                     </select>
                 </div>
 

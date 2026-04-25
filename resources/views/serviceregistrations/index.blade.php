@@ -23,7 +23,9 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form action="{{ route('user.pelayanan.store') }}" method="POST">
+            <form action="{{ auth()->user()->role == 'admin' 
+                ? route('service-registrations.store') 
+                : route('user.pelayanan.store') }}" method="POST">
                 @csrf
 
                 <input type="text" name="name" class="form-control mb-2" placeholder="Nama Jemaat" required>

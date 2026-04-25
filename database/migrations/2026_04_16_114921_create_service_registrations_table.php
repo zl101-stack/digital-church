@@ -13,8 +13,17 @@ return new class extends Migration
     {
         Schema::create('service_registrations', function (Blueprint $table) {
             $table->id();
+
+            // ✅ TAMBAHAN
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
             $table->string('name');
+
             $table->foreignId('service_id')->constrained()->cascadeOnDelete();
+
+            // ✅ TAMBAHAN (karena dipakai di controller)
+            $table->string('position');
+
             $table->timestamps();
         });
     }
