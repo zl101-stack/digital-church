@@ -9,13 +9,22 @@ use Carbon\Carbon;
 
 class CounselingController extends Controller
 {
-    //  TAMPIL DATA
+    //  TAMPIL DATA (ADMIN)
     public function index()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
         $pastors = Pastor::all();
 
         return view('counselings.index', compact('counselings', 'pastors'));
+    }
+
+    // 🔥 TAMBAHAN UNTUK USER (TIDAK MENGUBAH LOGIKA)
+    public function userView()
+    {
+        $counselings = Counseling::with('pastor', 'user')->latest()->get();
+        $pastors = Pastor::all();
+
+        return view('user.counseling', compact('counselings', 'pastors'));
     }
 
     //  FORM EDIT
@@ -40,6 +49,7 @@ class CounselingController extends Controller
 
         $start = Carbon::parse($request->date . ' ' . $request->time);
         $end = (clone $start)->addMinutes((int) $request->duration);
+
         $exists = Counseling::where('pastor_id', $request->pastor_id)
             ->where('date', $request->date)
             ->where('id', '!=', $id)
@@ -91,12 +101,9 @@ class CounselingController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        // waktu mulai
         $start = Carbon::parse($request->date . ' ' . $request->time);
-
-        // waktu selesai
         $end = (clone $start)->addMinutes((int) $request->duration);
-        // CEK OVERLAP
+
         $exists = Counseling::where('pastor_id', $request->pastor_id)
             ->where('date', $request->date)
             ->where(function ($query) use ($start, $end) {

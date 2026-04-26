@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    
     protected $fillable = [
         'title',
         'description',
@@ -14,7 +13,8 @@ class Service extends Model
         'time',
         'location'
     ];
-    
+
+    // 🔥 relasi ke registrations (SUDAH BENAR, TIDAK DIUBAH)
     public function registrations()
     {
         return $this->hasMany(ServiceRegistration::class);

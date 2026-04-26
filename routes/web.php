@@ -65,6 +65,10 @@ Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
 
     Route::post('/user/pelayanan', [ServiceRegistrationController::class, 'store'])
         ->name('user.pelayanan.store');
+
+    // 🔥 TAMBAHAN (INI DOANG)
+    Route::get('/user/counseling', [CounselingController::class, 'userView'])
+        ->name('user.counseling');
 });
 
 

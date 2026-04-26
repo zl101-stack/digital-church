@@ -168,7 +168,12 @@
                 <div class="card-genz">
                     <h2>🧠</h2>
                     <h5>Konseling</h5>
-                    <a href="/counseling" class="btn btn-info mt-2">Talk</a>
+
+                    {{-- 🔥 PERBAIKAN DI SINI SAJA --}}
+                    <a href="{{ route('user.counseling') }}" class="btn btn-info mt-2">
+                        Talk
+                    </a>
+
                 </div>
             </div>
 
