@@ -1,93 +1,100 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
 @section('content')
 
 <style>
-body{
-    background:linear-gradient(135deg,#0f172a,#111827);
-    color:white;
-}
+    body {
+        background: linear-gradient(135deg, #0f172a, #111827);
+        color: white;
+    }
 
-/* HEADER */
-.title-page{
-    font-size:42px;
-    font-weight:800;
-    color:#ffffff;
-    margin-bottom:8px;
-}
+    /* HEADER */
+    .title-page {
+        font-size: 42px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
 
-.small-text{
-    color:#cbd5e1;
-    font-size:16px;
-}
+    .small-text {
+        color: #cbd5e1;
+        font-size: 16px;
+    }
 
-/* CARD */
-.card-jadwal{
-    background:rgba(30,41,59,0.95);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:22px;
-    padding:28px;
-    transition:0.35s ease;
-    height:100%;
-    box-shadow:0 12px 25px rgba(0,0,0,0.25);
-}
+    /* CARD */
+    .card-jadwal {
+        background: rgba(30, 41, 59, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 28px;
+        transition: 0.35s ease;
+        height: 100%;
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    }
 
-.card-jadwal:hover{
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(0,0,0,0.35);
-    border-color:#22c55e;
-}
+    .card-jadwal:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        border-color: #22c55e;
+    }
 
-/* TITLE */
-.judul-jadwal{
-    font-size:24px;
-    font-weight:700;
-    color:#ffffff;
-    margin-bottom:12px;
-}
+    /* TITLE */
+    .judul-jadwal {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+    }
 
-/* DESC */
-.desc{
-    color:#cbd5e1;
-    min-height:55px;
-}
+    /* DESC */
+    .desc {
+        color: #cbd5e1;
+        min-height: 55px;
+    }
 
-/* INFO BOX */
-.info-box{
-    background:#334155;
-    padding:10px 14px;
-    border-radius:14px;
-    margin-bottom:10px;
-    color:#f8fafc;
-}
+    /* INFO BOX */
+    .info-box {
+        background: #334155;
+        padding: 10px 14px;
+        border-radius: 14px;
+        margin-bottom: 10px;
+        color: #f8fafc;
+    }
 
-/* BADGE */
-.badge-jadwal{
-    background:linear-gradient(90deg,#22c55e,#16a34a);
-    padding:10px 18px;
-    border-radius:50px;
-    font-size:14px;
-    font-weight:600;
-    display:inline-block;
-    margin-top:10px;
-}
+    /* BADGE */
+    .badge-jadwal {
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 10px;
+    }
 
-/* BUTTON */
-.btn-back{
-    border-radius:50px;
-    padding:12px 28px;
-    font-weight:600;
-}
+    /* BUTTON */
+    .btn-back {
+        border-radius: 50px;
+        padding: 12px 28px;
+        font-weight: 600;
+    }
 
-/* EMPTY */
-.alert-warning{
-    border:none;
-    background:#f59e0b;
-    color:#111827;
-}
+    /* EMPTY */
+    .alert-warning {
+        border: none;
+        background: #f59e0b;
+        color: #111827;
+    }
 </style>
 
 <div class="container py-5">
+
+    <!-- 🔥 BUTTON (KIRI) -->
+    <div class="mt-4 mb-3">
+        <a href="{{ route('user.home') }}" class="btn btn-outline-light btn-back">
+            ← Kembali ke Dashboard
+        </a>
+    </div>
 
     <!-- HEADER -->
     <div class="text-center mb-5">
@@ -147,13 +154,6 @@ body{
 
         @endforelse
 
-    </div>
-
-    <!-- BUTTON -->
-    <div class="text-center mt-5">
-        <a href="{{ route('user.home') }}" class="btn btn-light btn-back">
-            ← Kembali ke Dashboard
-        </a>
     </div>
 
 </div>

@@ -13,49 +13,116 @@
         border-radius: 20px;
         padding: 20px;
         margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.3s;
     }
 
     .card-modern:hover {
-        transform: scale(1.02);
+        transform: scale(1.03);
         box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .badge-open {
+        background: #22c55e;
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 12px;
     }
 </style>
 
 <div class="container mt-4">
 
-    <h3>🧠 Booking Konseling</h3>
+    <h3>🧠 Konseling Gereja</h3>
 
-    {{-- FORM --}}
-    <div class="card-modern">
-        <form action="/counseling" method="POST">
-            @csrf
+    {{-- 🔥 NOTIF ERROR --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-            <select name="pastor_id" class="form-control mb-2" required>
-                <option value="">-- Pilih Pastor --</option>
-                @foreach($pastors as $pastor)
-                    <option value="{{ $pastor->id }}">{{ $pastor->name }}</option>
-                @endforeach
-            </select>
+    {{-- 🔥 NOTIF SUCCESS --}}
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-            <input type="date" name="date" class="form-control mb-2" required>
+    {{-- ========================
+        LIST PASTOR
+    ======================== --}}
+    <div class="row">
 
-            <input type="time" name="time" class="form-control mb-2" required>
+        @foreach($pastors as $pastor)
 
-            <select name="duration" class="form-control mb-2">
-                <option value="30">30 Menit</option>
-                <option value="60">60 Menit</option>
-            </select>
+        <div class="col-md-6">
 
-            <textarea name="note" class="form-control mb-2" placeholder="Catatan"></textarea>
+            <div class="card-modern"
+                 data-bs-toggle="modal"
+                 data-bs-target="#modalPastor{{ $pastor->id }}">
 
-            <button class="btn btn-info w-100">
-                Booking Sekarang
-            </button>
-        </form>
+                <h5>👤 {{ $pastor->name }}</h5>
+                <p>Klik untuk booking konseling</p>
+
+                <div class="text-end">
+                    <span class="badge-open">BOOK</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        {{-- ========================
+            MODAL BOOKING
+        ======================== --}}
+        <div class="modal fade" id="modalPastor{{ $pastor->id }}">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white p-3">
+
+                    <h5>Booking dengan {{ $pastor->name }}</h5>
+
+                    <form action="{{ route('user.counseling.store') }}" method="POST">
+                        @csrf
+
+                        <input type="hidden" name="pastor_id" value="{{ $pastor->id }}">
+
+                        <label>Tanggal</label>
+                        <input type="date" name="date" class="form-control mb-2" required>
+
+                        <label>Jam</label>
+                        <input type="time" name="time" class="form-control mb-2" required>
+
+                        <label>Durasi</label>
+                        <select name="duration" class="form-control mb-2">
+                            <option value="30">30 Menit</option>
+                            <option value="60">60 Menit</option>
+                        </select>
+
+                        <textarea name="note" class="form-control mb-2" placeholder="Catatan"></textarea>
+
+                        <div class="form-check mb-2">
+                            <input type="checkbox" name="is_anonymous" class="form-check-input">
+                            <label>Booking sebagai anonim</label>
+                        </div>
+
+                        <button class="btn btn-info w-100">
+                            Booking Sekarang
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        @endforeach
+
     </div>
 
-    {{-- LIST --}}
-    <h5 class="mt-4">📋 Jadwal Konseling</h5>
+    {{-- ========================
+        LOG BOOKING
+    ======================== --}}
+    <h5 class="mt-5">📋 Riwayat Konseling</h5>
 
     @foreach($counselings as $c)
 
@@ -64,8 +131,15 @@
         <strong>{{ $c->pastor->name ?? '-' }}</strong><br>
 
         <small>📅 {{ $c->date }}</small><br>
-        <small>⏰ {{ $c->time }}</small><br>
-        <small>👤 {{ $c->is_anonymous ? 'Anonim' : $c->user->name }}</small>
+
+        <small>
+            ⏰ {{ \Carbon\Carbon::parse($c->time)->format('H:i') }} - 
+            {{ \Carbon\Carbon::parse($c->time)->addMinutes($c->duration)->format('H:i') }}
+        </small><br>
+
+        <small>
+            👤 {{ $c->is_anonymous ? 'Anonim' : $c->user->name }}
+        </small>
 
     </div>
 

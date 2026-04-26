@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
 @section('content')
 
@@ -84,16 +84,6 @@
         border: none;
     }
 
-    .back-link {
-        color: #cbd5e1;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .back-link:hover {
-        color: #22c55e;
-    }
-
     .btn-outline-light {
         border: 2px solid #cbd5e1;
         color: #cbd5e1;
@@ -109,8 +99,7 @@
 
 <div class="container py-5">
 
-    <!-- Tombol Kembali -->
-    <!-- Tombol Kembali -->
+    <!-- 🔥 BUTTON (KIRI, TANPA NAVBAR) -->
     <div class="mb-4">
         <a href="{{ route('user.home') }}" class="btn btn-outline-light rounded-pill px-4">
             ← Kembali ke Dashboard

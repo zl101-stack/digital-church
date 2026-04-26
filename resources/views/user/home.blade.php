@@ -3,115 +3,138 @@
 @section('content')
 
 <style>
+    body {
+        background: radial-gradient(circle at top, #0f172a, #020617);
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* NAVBAR */
+    .topbar {
+        background: rgba(2,6,23,0.8);
+        backdrop-filter: blur(10px);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #1e293b;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 240px;
+        background: rgba(2,6,23,0.9);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-right: 1px solid #1e293b;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #94a3b8;
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 12px;
+        transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+        background: #1e293b;
+        color: white;
+    }
+
+    .sidebar a.active {
+        background: linear-gradient(90deg,#6366f1,#06b6d4);
+        color: white;
+        box-shadow: 0 0 15px rgba(99,102,241,0.5);
+    }
+
+    /* CONTENT */
+    .content {
+        flex: 1;
+        padding: 30px;
+    }
+
+    /* HEADER */
     .welcome-box {
         background: linear-gradient(135deg, #6366f1, #06b6d4);
         padding: 25px;
         border-radius: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(99,102,241,0.4);
     }
 
+    /* CARD */
     .card-genz {
-        background: #1e293b;
+        background: rgba(30,41,59,0.9);
         border-radius: 20px;
-        padding: 20px;
+        padding: 25px;
         text-align: center;
         transition: 0.3s;
-        color: white;
+        border: 1px solid rgba(255,255,255,0.05);
     }
 
     .card-genz:hover {
-        transform: translateY(-10px) scale(1.05);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        border: 1px solid #06b6d4;
     }
 
-    .notif-card {
-        background: #1e293b;
-        border-radius: 20px;
-        padding: 20px;
-        color: white;
-        margin-bottom: 20px;
-    }
-
-    .notif-item {
-        border-bottom: 1px solid #334155;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-    }
-
-    .badge-new {
-        background: #22c55e;
-        font-size: 10px;
-        padding: 3px 6px;
-        border-radius: 10px;
-        margin-left: 5px;
-    }
-
+    /* MINI CARD */
     .mini-card {
-        background: #1e293b;
+        background: rgba(30,41,59,0.9);
         border-radius: 15px;
         padding: 15px;
         text-align: center;
-        color: white;
+        transition: 0.3s;
     }
+
+    .mini-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* BUTTON */
+    .btn {
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
 </style>
 
-<!-- 🔥 HEADER -->
-<div class="welcome-box">
-    <h3>👋 Halo, {{ auth()->user()->name }}</h3>
-    <p class="mb-0">Stay connected dengan pelayanan & imanmu ✨</p>
+<!-- NAVBAR -->
+<div class="topbar">
+    <h5>⛪ Digital Church</h5>
+    <div>👤 {{ auth()->user()->name }}</div>
 </div>
 
-<div class="row">
+<div style="display:flex;">
 
-    <!-- 🔔 LEFT SIDE (NOTIF + INFO) -->
-    <div class="col-md-4">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
-        <!-- 🔔 JADWAL -->
-        <div class="notif-card">
-            <h5>🔔 Jadwal Terbaru</h5>
+        <a href="{{ route('user.home') }}" class="active">🏠 Dashboard</a>
+        <a href="{{ route('user.services') }}">📅 Jadwal</a>
+        <a href="{{ route('user.pelayanan') }}">🙌 Pelayanan</a>
+        <a href="{{ route('user.donation') }}">💰 Donasi</a>
+        <a href="{{ route('user.counseling') }}">🧠 Konseling</a>
 
-            @if(isset($services) && count($services) > 0)
+        <hr style="border-color:#1e293b;">
 
-            @foreach($services as $service)
-            <div class="notif-item">
-                <strong>{{ $service->title }}</strong>
-                <span class="badge-new">NEW</span><br>
-                <small class="text-muted">{{ $service->date }}</small>
-            </div>
-            @endforeach
-
-            @else
-            <p class="text-muted">Belum ada jadwal</p>
-            @endif
-        </div>
-
-        <!-- 🙌 PELAYANAN AVAILABLE -->
-        <div class="notif-card">
-            <h5>🙌 Pelayanan Available</h5>
-
-            <div class="notif-item">
-                Worship Team
-                <span class="badge-new">OPEN</span>
-            </div>
-
-            <div class="notif-item">
-                Multimedia
-                <span class="badge-new">OPEN</span>
-            </div>
-
-            <div class="notif-item">
-                Singer / Musician
-                <span class="badge-new">OPEN</span>
-            </div>
-        </div>
-
+        <a href="/auto-logout" style="color:#ef4444;">🚪 Logout</a>
     </div>
 
-    <!-- 🔥 RIGHT SIDE (MAIN DASHBOARD) -->
-    <div class="col-md-8">
+    <!-- CONTENT -->
+    <div class="content">
 
-        <!-- 📊 MINI STATS -->
-        <div class="row mb-3">
+        <div class="welcome-box">
+            <h3>👋 Halo, {{ auth()->user()->name }}</h3>
+            <p>Stay connected dengan pelayanan & imanmu ✨</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="row mb-4">
             <div class="col-md-4">
                 <div class="mini-card">
                     <h5>📅</h5>
@@ -137,8 +160,8 @@
             </div>
         </div>
 
-        <!-- 🔥 MENU -->
-        <div class="row g-3">
+        <!-- MENU -->
+        <div class="row g-4">
 
             <div class="col-md-6">
                 <div class="card-genz">
@@ -168,12 +191,7 @@
                 <div class="card-genz">
                     <h2>🧠</h2>
                     <h5>Konseling</h5>
-
-                    {{-- 🔥 PERBAIKAN DI SINI SAJA --}}
-                    <a href="{{ route('user.counseling') }}" class="btn btn-info mt-2">
-                        Talk
-                    </a>
-
+                    <a href="{{ route('user.counseling') }}" class="btn btn-info mt-2">Talk</a>
                 </div>
             </div>
 

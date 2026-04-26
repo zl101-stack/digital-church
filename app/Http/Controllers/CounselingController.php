@@ -9,7 +9,9 @@ use Carbon\Carbon;
 
 class CounselingController extends Controller
 {
+    // =========================================
     //  TAMPIL DATA (ADMIN)
+    // =========================================
     public function index()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
@@ -18,7 +20,9 @@ class CounselingController extends Controller
         return view('counselings.index', compact('counselings', 'pastors'));
     }
 
-    // 🔥 TAMBAHAN UNTUK USER (TIDAK MENGUBAH LOGIKA)
+    // =========================================
+    //  VIEW USER
+    // =========================================
     public function userView()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
@@ -27,7 +31,9 @@ class CounselingController extends Controller
         return view('user.counseling', compact('counselings', 'pastors'));
     }
 
-    //  FORM EDIT
+    // =========================================
+    //  EDIT
+    // =========================================
     public function edit($id)
     {
         $counseling = Counseling::findOrFail($id);
@@ -36,7 +42,9 @@ class CounselingController extends Controller
         return view('counselings.edit', compact('counseling', 'pastors'));
     }
 
-    //  UPDATE DATA
+    // =========================================
+    //  UPDATE
+    // =========================================
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -47,7 +55,10 @@ class CounselingController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $start = Carbon::parse($request->date . ' ' . $request->time);
+        // 🔥 FIX FORMAT JAM (TANPA UBAH LOGIKA)
+        $time = date('H:i:s', strtotime($request->time));
+
+        $start = Carbon::parse($request->date . ' ' . $time);
         $end = (clone $start)->addMinutes((int) $request->duration);
 
         $exists = Counseling::where('pastor_id', $request->pastor_id)
@@ -56,7 +67,7 @@ class CounselingController extends Controller
             ->where(function ($query) use ($start, $end) {
                 $query->where(function ($q) use ($start, $end) {
                     $q->whereTime('time', '<', $end)
-                        ->whereRaw("ADDTIME(time, SEC_TO_TIME(duration * 60)) > ?", [$start->format('H:i:s')]);
+                      ->whereRaw("ADDTIME(time, SEC_TO_TIME(duration * 60)) > ?", [$start->format('H:i:s')]);
                 });
             })
             ->exists();
@@ -72,7 +83,7 @@ class CounselingController extends Controller
         $counseling->update([
             'pastor_id' => $request->pastor_id,
             'date' => $request->date,
-            'time' => $request->time,
+            'time' => $time,
             'duration' => (int) $request->duration,
             'is_anonymous' => $request->has('is_anonymous'),
             'note' => $request->note,
@@ -81,7 +92,9 @@ class CounselingController extends Controller
         return redirect('/counseling')->with('success', 'Data berhasil diupdate');
     }
 
-    //  HAPUS DATA
+    // =========================================
+    //  DELETE
+    // =========================================
     public function destroy($id)
     {
         $counseling = Counseling::findOrFail($id);
@@ -90,7 +103,9 @@ class CounselingController extends Controller
         return back()->with('success', 'Data berhasil dihapus');
     }
 
-    //  SIMPAN DATA BARU
+    // =========================================
+    //  STORE
+    // =========================================
     public function store(Request $request)
     {
         $request->validate([
@@ -101,7 +116,10 @@ class CounselingController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $start = Carbon::parse($request->date . ' ' . $request->time);
+        // 🔥 FIX FORMAT JAM (TANPA UBAH LOGIKA)
+        $time = date('H:i:s', strtotime($request->time));
+
+        $start = Carbon::parse($request->date . ' ' . $time);
         $end = (clone $start)->addMinutes((int) $request->duration);
 
         $exists = Counseling::where('pastor_id', $request->pastor_id)
@@ -109,7 +127,7 @@ class CounselingController extends Controller
             ->where(function ($query) use ($start, $end) {
                 $query->where(function ($q) use ($start, $end) {
                     $q->whereTime('time', '<', $end)
-                        ->whereRaw("ADDTIME(time, SEC_TO_TIME(duration * 60)) > ?", [$start->format('H:i:s')]);
+                      ->whereRaw("ADDTIME(time, SEC_TO_TIME(duration * 60)) > ?", [$start->format('H:i:s')]);
                 });
             })
             ->exists();
@@ -124,7 +142,7 @@ class CounselingController extends Controller
             'user_id' => auth()->user()->id,
             'pastor_id' => $request->pastor_id,
             'date' => $request->date,
-            'time' => $request->time,
+            'time' => $time,
             'duration' => $request->duration,
             'is_anonymous' => $request->has('is_anonymous'),
             'note' => $request->note,
