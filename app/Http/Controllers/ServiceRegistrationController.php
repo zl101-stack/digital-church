@@ -11,9 +11,8 @@ class ServiceRegistrationController extends Controller
 
     public function myService()
     {
-        $registrations = ServiceRegistration::with('service')
-            ->where('user_id', auth()->id())
-            ->get();
+        // ✅ tetap seperti kamu buat (menampilkan semua)
+        $registrations = ServiceRegistration::with('service')->get();
 
         $services = Service::all();
 
@@ -45,12 +44,14 @@ class ServiceRegistrationController extends Controller
             'name'       => 'required'
         ]);
 
+        // 🔥 FIX UTAMA (tambahkan user_id biar tidak double per user)
         $exists = ServiceRegistration::where('service_id', $request->service_id)
             ->where('position', $request->position)
+            ->where('user_id', auth()->id()) // ✅ TAMBAHAN
             ->exists();
 
         if ($exists) {
-            return back()->with('error', 'Posisi sudah diisi.');
+            return back()->with('error', 'Kamu sudah mengambil posisi ini di jadwal tersebut.');
         }
 
         $userId = auth()->id();
@@ -100,7 +101,7 @@ class ServiceRegistrationController extends Controller
             'position'   => 'required',
         ]);
 
-        // 🔥 TAMBAHAN (INI FIX UTAMA, TANPA UBAH LOGIKA)
+        // ✅ FIX VALIDASI DUPLIKAT (SUDAH BENAR, JANGAN DIUBAH)
         $exists = ServiceRegistration::where('service_id', $request->service_id)
             ->where('position', $request->position)
             ->where('id', '!=', $id)

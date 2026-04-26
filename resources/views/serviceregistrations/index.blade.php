@@ -23,7 +23,7 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            {{-- ✅ FIX DI SINI (TANPA UBAH LOGIKA) --}}
+            {{-- ✅ SUDAH BENAR --}}
             @php
                 $isAdmin = in_array(auth()->user()->role, ['admin','superadmin']);
             @endphp
@@ -73,15 +73,21 @@
                 <td>{{ $reg->position }}</td>
                 <td>
 
-                    <a href="/service-registrations/{{ $reg->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+                    {{-- 🔥 FIX DI SINI --}}
+                    @if($isAdmin)
 
-                    <form action="/service-registrations/{{ $reg->id }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">
-                            Hapus
-                        </button>
-                    </form>
+                        <a href="/service-registrations/{{ $reg->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+
+                        <form action="/service-registrations/{{ $reg->id }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">
+                                Hapus
+                            </button>
+                        </form>
+
+                    @endif
+                    {{-- 🔥 END FIX --}}
 
                 </td>
             </tr>

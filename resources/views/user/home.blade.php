@@ -116,7 +116,7 @@
                 <div class="mini-card">
                     <h5>📅</h5>
                     <small>Jadwal Minggu Ini</small>
-                    <h4>{{ count($services ?? []) }}</h4>
+                    <h4>{{ $totalServices }}</h4>
                 </div>
             </div>
 

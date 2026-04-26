@@ -43,10 +43,12 @@ Route::middleware('auth')->get('/dashboard', function () {
    USER
 =================================== */
 
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
 
     Route::get('/user/home', function () {
-        return view('user.home');
+        return view('user.home', [
+            'totalServices' => Service::count()
+        ]);
     })->name('user.home');
 
     Route::get('/user/services', [ServiceController::class, 'userIndex'])
@@ -79,7 +81,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ]);
     })->name('admin.dashboard');
 
-    // 🔥 TAMBAHAN (INI FIX UTAMA)
     Route::get('/admin/pelayanan', [ServiceRegistrationController::class, 'index'])
         ->name('admin.pelayanan');
 });
