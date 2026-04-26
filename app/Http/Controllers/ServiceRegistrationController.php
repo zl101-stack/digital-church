@@ -42,7 +42,7 @@ class ServiceRegistrationController extends Controller
         $request->validate([
             'service_id' => 'required',
             'position'   => 'required',
-            'name'       => 'required' // tetap seperti kamu buat
+            'name'       => 'required'
         ]);
 
         $exists = ServiceRegistration::where('service_id', $request->service_id)
@@ -53,8 +53,7 @@ class ServiceRegistrationController extends Controller
             return back()->with('error', 'Posisi sudah diisi.');
         }
 
-        // ✅ PERBAIKAN (TANPA UBAH LOGIKA BESAR)
-        $userId = auth()->id(); // 🔥 tidak boleh null
+        $userId = auth()->id();
         $name   = auth()->user()->role == 'user'
             ? auth()->user()->name
             : $request->name;
@@ -100,6 +99,16 @@ class ServiceRegistrationController extends Controller
             'service_id' => 'required',
             'position'   => 'required',
         ]);
+
+        // 🔥 TAMBAHAN (INI FIX UTAMA, TANPA UBAH LOGIKA)
+        $exists = ServiceRegistration::where('service_id', $request->service_id)
+            ->where('position', $request->position)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Posisi sudah diisi.');
+        }
 
         $registration->update([
             'service_id' => $request->service_id,

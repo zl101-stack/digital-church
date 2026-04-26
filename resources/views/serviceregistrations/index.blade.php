@@ -23,7 +23,12 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form action="{{ auth()->user()->role == 'admin' 
+            {{-- ✅ FIX DI SINI (TANPA UBAH LOGIKA) --}}
+            @php
+                $isAdmin = in_array(auth()->user()->role, ['admin','superadmin']);
+            @endphp
+
+            <form action="{{ $isAdmin 
                 ? route('service-registrations.store') 
                 : route('user.pelayanan.store') }}" method="POST">
                 @csrf
@@ -58,7 +63,6 @@
                 <th>Jadwal</th>
                 <th>Posisi</th>
                 <th>Aksi</th>
-                
             </tr>
         </thead>
         <tbody>
