@@ -19,7 +19,7 @@
 
     .card-modern:hover {
         transform: scale(1.03);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     .badge-open {
@@ -28,24 +28,36 @@
         border-radius: 10px;
         font-size: 12px;
     }
+
+    .btn-back {
+        border-radius: 50px;
+        padding: 12px 28px;
+        font-weight: 600;
+    }
 </style>
 
 <div class="container mt-4">
+    <!-- 🔥 BUTTON (KIRI) -->
+    <div class="mt-4 mb-3">
+        <a href="{{ route('user.home') }}" class="btn btn-outline-light btn-back">
+            ← Kembali ke Dashboard
+        </a>
+    </div>
 
     <h3>🧠 Konseling Gereja</h3>
 
     {{-- 🔥 NOTIF ERROR --}}
     @if ($errors->any())
-        <div class="alert alert-danger">
-            {{ $errors->first() }}
-        </div>
+    <div class="alert alert-danger">
+        {{ $errors->first() }}
+    </div>
     @endif
 
     {{-- 🔥 NOTIF SUCCESS --}}
     @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @endif
 
     {{-- ========================
@@ -58,8 +70,8 @@
         <div class="col-md-6">
 
             <div class="card-modern"
-                 data-bs-toggle="modal"
-                 data-bs-target="#modalPastor{{ $pastor->id }}">
+                data-bs-toggle="modal"
+                data-bs-target="#modalPastor{{ $pastor->id }}">
 
                 <h5>👤 {{ $pastor->name }}</h5>
                 <p>Klik untuk booking konseling</p>
@@ -133,7 +145,7 @@
         <small>📅 {{ $c->date }}</small><br>
 
         <small>
-            ⏰ {{ \Carbon\Carbon::parse($c->time)->format('H:i') }} - 
+            ⏰ {{ \Carbon\Carbon::parse($c->time)->format('H:i') }} -
             {{ \Carbon\Carbon::parse($c->time)->addMinutes($c->duration)->format('H:i') }}
         </small><br>
 

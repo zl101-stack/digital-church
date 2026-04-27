@@ -130,6 +130,22 @@
 
     <div class="row">
 
+        <!-- Welcome -->
+        <div class="col-md-4 mb-4">
+            <div class="card text-dark bg-warning card-hover">
+                <div class="card-body">
+                    <h5 class="card-title">👋 Selamat Datang</h5>
+
+                    @auth
+                    <p>{{ auth()->user()->name }}</p>
+                    @else
+                    <p>Guest</p>
+                    @endauth
+
+                </div>
+            </div>
+        </div>
+
         <!-- Total Jadwal -->
         <div class="col-md-4 mb-4">
             <div class="card text-white bg-primary card-hover">
@@ -176,22 +192,6 @@
             </div>
         </div>
 
-        <!-- Welcome -->
-        <div class="col-md-4 mb-4">
-            <div class="card text-dark bg-warning card-hover">
-                <div class="card-body">
-                    <h5 class="card-title">👋 Selamat Datang</h5>
-
-                    @auth
-                    <p>{{ auth()->user()->name }}</p>
-                    @else
-                    <p>Guest</p>
-                    @endauth
-
-                    <a href="/" class="btn btn-dark mt-2">Home</a>
-                </div>
-            </div>
-        </div>
 
         <!-- 🔥 SUPERADMIN ONLY -->
         @if(auth()->user()->role === 'superadmin')

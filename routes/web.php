@@ -48,7 +48,8 @@ Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
 
     Route::get('/user/home', function () {
         return view('user.home', [
-            'totalServices' => Service::count()
+            'totalServices' => Service::count(),
+            'services' => Service::latest()->take(3)->get()
         ]);
     })->name('user.home');
 
