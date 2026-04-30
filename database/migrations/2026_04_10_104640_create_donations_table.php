@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
 
-            // ✅ user_id boleh null (untuk anonim)
+            // user_id boleh null (untuk anonim)
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained()

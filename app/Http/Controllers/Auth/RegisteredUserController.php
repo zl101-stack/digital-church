@@ -9,14 +9,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
+     * Display register page
      */
     public function create(): View
     {
@@ -24,84 +23,148 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Register normal user
      */
     public function store(Request $request): RedirectResponse
     {
-        // 🔹 VALIDASI
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
         ]);
 
-        // 🔥 CREATE USER (ROLE = USER)
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => strip_tags($request->name),
+            'email' => strtolower($request->email),
             'password' => Hash::make($request->password),
-            'role' => 'user', // 🔥 WAJIB
+            'role' => 'user',
         ]);
 
-        // 🔹 EVENT REGISTER
         event(new Registered($user));
 
-        // 🔹 AUTO LOGIN
         Auth::login($user);
 
-        // 🔥 REDIRECT KE HALAMAN JEMAAT
-        return redirect('/user/home');
+        $request->session()->regenerate();
+
+        return redirect()->route('user.home');
     }
 
-    /* ================= ADMIN ================= */
-
+    /**
+     * Display admin register page
+     */
     public function createAdmin(): View
     {
         return view('auth.register');
     }
 
+    /**
+     * Register admin
+     */
     public function storeAdmin(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => strip_tags($request->name),
+            'email' => strtolower($request->email),
             'password' => Hash::make($request->password),
             'role' => 'admin',
         ]);
 
-        return redirect('/login');
+        return redirect()->route('login')
+            ->with('success', 'Admin berhasil dibuat.');
     }
 
+    /**
+     * Display superadmin register page
+     */
     public function createSuperAdmin(): View
     {
         return view('auth.register');
     }
+
+    /**
+     * Register superadmin
+     */
     public function storeSuperAdmin(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'secret_key' => ['required'],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
+            'secret_key' => ['required', 'string'],
         ]);
 
+        /**
+         * Simpan di .env:
+         * SUPERADMIN_SECRET=church123
+         */
+
         if ($request->secret_key !== env('SUPERADMIN_SECRET')) {
-            return back()->withErrors(['secret_key' => 'Kode salah']);
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'secret_key' => 'Secret key salah.',
+                ]);
         }
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => strip_tags($request->name),
+            'email' => strtolower($request->email),
             'password' => Hash::make($request->password),
             'role' => 'superadmin',
         ]);
 
-        return redirect('/login');
+        return redirect()->route('login')
+            ->with('success', 'Superadmin berhasil dibuat.');
     }
 }

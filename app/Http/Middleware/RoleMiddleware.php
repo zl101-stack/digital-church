@@ -4,29 +4,30 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     */
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // ✅ CEK LOGIN (tetap)
         if (!auth()->check()) {
             abort(403);
         }
 
-        // ✅ TAMBAHAN (FIX MASALAH user,admin)
         $roles = collect($roles)
-            ->flatMap(function ($role) {
-                return explode(',', $role);
-            })
+            ->flatMap(fn($role) => explode(',', $role))
             ->toArray();
 
-        // ✅ LOGIKA LAMA (tidak diubah)
         if (!in_array(auth()->user()->role, $roles)) {
+
+            Log::warning('Akses ilegal role', [
+                'user' => auth()->user()->email,
+                'role' => auth()->user()->role,
+                'url' => $request->fullUrl(),
+                'ip' => $request->ip(),
+            ]);
+
             abort(403);
         }
 

@@ -14,7 +14,6 @@ class Service extends Model
         'location'
     ];
 
-    // 🔥 relasi ke registrations (SUDAH BENAR, TIDAK DIUBAH)
     public function registrations()
     {
         return $this->hasMany(ServiceRegistration::class);

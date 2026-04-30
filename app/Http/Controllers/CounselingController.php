@@ -9,9 +9,7 @@ use Carbon\Carbon;
 
 class CounselingController extends Controller
 {
-    // =========================================
     //  TAMPIL DATA (ADMIN)
-    // =========================================
     public function index()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
@@ -20,9 +18,7 @@ class CounselingController extends Controller
         return view('counselings.index', compact('counselings', 'pastors'));
     }
 
-    // =========================================
     //  VIEW USER
-    // =========================================
     public function userView()
     {
         $counselings = Counseling::with('pastor', 'user')->latest()->get();
@@ -31,9 +27,7 @@ class CounselingController extends Controller
         return view('user.counseling', compact('counselings', 'pastors'));
     }
 
-    // =========================================
     //  EDIT
-    // =========================================
     public function edit($id)
     {
         $counseling = Counseling::findOrFail($id);
@@ -42,9 +36,7 @@ class CounselingController extends Controller
         return view('counselings.edit', compact('counseling', 'pastors'));
     }
 
-    // =========================================
     //  UPDATE
-    // =========================================
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -55,7 +47,7 @@ class CounselingController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        // 🔥 FIX FORMAT JAM (TANPA UBAH LOGIKA)
+        //FORMAT JAM
         $time = date('H:i:s', strtotime($request->time));
 
         $start = Carbon::parse($request->date . ' ' . $time);
@@ -92,9 +84,7 @@ class CounselingController extends Controller
         return redirect('/counseling')->with('success', 'Data berhasil diupdate');
     }
 
-    // =========================================
     //  DELETE
-    // =========================================
     public function destroy($id)
     {
         $counseling = Counseling::findOrFail($id);
@@ -103,9 +93,7 @@ class CounselingController extends Controller
         return back()->with('success', 'Data berhasil dihapus');
     }
 
-    // =========================================
     //  STORE
-    // =========================================
     public function store(Request $request)
     {
         $request->validate([
@@ -116,7 +104,7 @@ class CounselingController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        // 🔥 FIX FORMAT JAM (TANPA UBAH LOGIKA)
+        //FORMAT JAM
         $time = date('H:i:s', strtotime($request->time));
 
         $start = Carbon::parse($request->date . ' ' . $time);

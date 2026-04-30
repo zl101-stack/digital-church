@@ -48,9 +48,6 @@ class ServiceRegistrationController extends Controller
             'name'       => 'required'
         ]);
 
-        // 🔥 FIX UTAMA (tanpa ubah logika besar)
-        // sebelumnya: cek posisi + user
-        // sekarang: cek user di jadwal tersebut
         $exists = ServiceRegistration::where('service_id', $request->service_id)
             ->where('user_id', auth()->id())
             ->exists();

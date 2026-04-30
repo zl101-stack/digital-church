@@ -39,7 +39,7 @@
             @endforeach
         </select>
 
-        {{-- ✅ FIX: selected posisi --}}
+        <!-- {{-- ✅ FIX: selected posisi --}} -->
         <select name="position" class="form-control mb-2" required>
             <option value="">-- Pilih Posisi --</option>
             <option value="Vokalis" {{ $registration->position == 'Vokalis' ? 'selected' : '' }}>Vokalis</option>

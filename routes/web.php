@@ -68,11 +68,9 @@ Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
     Route::post('/user/pelayanan', [ServiceRegistrationController::class, 'store'])
         ->name('user.pelayanan.store');
 
-    // ✅ USER VIEW COUNSELING
     Route::get('/user/counseling', [CounselingController::class, 'userView'])
         ->name('user.counseling');
 
-    // ✅ USER BOOKING (INI YANG FIX 403)
     Route::post('/user/counseling', [CounselingController::class, 'store'])
         ->name('user.counseling.store');
 });

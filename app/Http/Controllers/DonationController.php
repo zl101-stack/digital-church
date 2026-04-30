@@ -34,7 +34,7 @@ class DonationController extends Controller
         $isAnonymous = $request->has('is_anonymous');
 
         Donation::create([
-            'user_id' => $isAnonymous ? null : auth()->id(), // ✅ FIX
+            'user_id' => $isAnonymous ? null : auth()->id(), 
             'amount' => $request->amount,
             'note' => $request->note,
             'date' => now(),
@@ -106,7 +106,7 @@ class DonationController extends Controller
         $isAnonymous = $request->has('is_anonymous');
 
         Donation::create([
-            'user_id' => $isAnonymous ? null : auth()->id(), // ✅ FIX
+            'user_id' => $isAnonymous ? null : auth()->id(), 
             'amount' => $request->amount,
             'note' => $request->note,
             'date' => now(),

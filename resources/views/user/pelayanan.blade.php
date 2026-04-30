@@ -19,7 +19,7 @@
 
     .card-modern:hover {
         transform: scale(1.03);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     .badge-open {
@@ -50,15 +50,15 @@
 
     {{-- 🔥 NOTIF --}}
     @if(session('error'))
-        <div class="alert alert-danger">
-            ❌ {{ session('error') }}
-        </div>
+    <div class="alert alert-danger">
+        ❌ {{ session('error') }}
+    </div>
     @endif
 
     @if(session('success'))
-        <div class="alert alert-success">
-            ✅ {{ session('success') }}
-        </div>
+    <div class="alert alert-success">
+        ✅ {{ session('success') }}
+    </div>
     @endif
 
 
@@ -72,18 +72,18 @@
         @foreach($services as $service)
 
         @php
-            $total = count($service->registrations);
+        $total = count($service->registrations);
 
-            $alreadyRegistered = $service->registrations
-                ->where('user_id', auth()->id())
-                ->count();
+        $alreadyRegistered = $service->registrations
+        ->where('user_id', auth()->id())
+        ->count();
         @endphp
 
         <div class="col-md-6">
 
             <div class="card-modern"
-                 data-bs-toggle="modal"
-                 data-bs-target="#modalService{{ $service->id }}">
+                data-bs-toggle="modal"
+                data-bs-target="#modalService{{ $service->id }}">
 
                 <h5>{{ $service->title }}</h5>
                 <p>{{ $service->location }}</p>
@@ -95,9 +95,9 @@
 
                 <div class="text-end mt-2">
                     @if($alreadyRegistered)
-                        <span class="badge-taken">SUDAH TERDAFTAR</span>
+                    <span class="badge-taken">SUDAH TERDAFTAR</span>
                     @else
-                        <span class="badge-open">OPEN</span>
+                    <span class="badge-open">OPEN</span>
                     @endif
                 </div>
 
@@ -113,9 +113,9 @@
                     <p>{{ $service->date }}</p>
 
                     @if($alreadyRegistered)
-                        <div class="alert alert-warning">
-                            ⚠️ Kamu sudah mengambil posisi di jadwal ini
-                        </div>
+                    <div class="alert alert-warning">
+                        ⚠️ Kamu sudah mengambil posisi di jadwal ini
+                    </div>
                     @endif
 
                     <form action="{{ route('user.pelayanan.store') }}" method="POST">
@@ -125,8 +125,8 @@
                         <input type="hidden" name="name" value="{{ auth()->user()->name }}">
 
                         @php
-                            $taken = $service->registrations->pluck('position')->toArray();
-                            $positions = ['Vokalis','Gitar','Drummer','Sound System'];
+                        $taken = $service->registrations->pluck('position')->toArray();
+                        $positions = ['Vokalis','Gitar','Drummer','Sound System','Multimedia'];
                         @endphp
 
                         @foreach($positions as $pos)
@@ -134,20 +134,20 @@
                         <div class="form-check mb-2">
 
                             <input type="radio"
-                                   name="position"
-                                   value="{{ $pos }}"
-                                   class="form-check-input"
-                                   {{ in_array($pos, $taken) || $alreadyRegistered ? 'disabled' : '' }}>
+                                name="position"
+                                value="{{ $pos }}"
+                                class="form-check-input"
+                                {{ in_array($pos, $taken) || $alreadyRegistered ? 'disabled' : '' }}>
 
                             <label class="form-check-label">
                                 {{ $pos }}
 
                                 @if(in_array($pos, $taken))
-                                    ❌ Sudah diambil
+                                ❌ Sudah diambil
                                 @elseif($alreadyRegistered)
-                                    🔒 Tidak bisa pilih lagi
+                                🔒 Tidak bisa pilih lagi
                                 @else
-                                    ✅ Tersedia
+                                ✅ Tersedia
                                 @endif
                             </label>
 
@@ -187,7 +187,7 @@
         </div>
 
         @empty
-            <p class="text-muted">Belum ada pelayan</p>
+        <p class="text-muted">Belum ada pelayan</p>
         @endforelse
 
     </div>

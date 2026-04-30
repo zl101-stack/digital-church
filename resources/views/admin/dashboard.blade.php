@@ -130,6 +130,21 @@
 
     <div class="row">
 
+        <!-- Welcome -->
+        <div class="col-md-4 mb-4">
+            <div class="card text-dark bg-warning card-hover">
+                <div class="card-body">
+                    <h5 class="card-title">👋 Selamat Datang</h5>
+
+                    @auth
+                    <p>{{ auth()->user()->name }}</p>
+                    @else
+                    <p>Guest</p>
+                    @endauth
+                </div>
+            </div>
+        </div>
+
         <!-- Total Jadwal -->
         <div class="col-md-4 mb-4">
             <div class="card text-white bg-primary card-hover">
@@ -172,23 +187,6 @@
                     <h5 class="card-title">🧠 Konseling Jemaat</h5>
                     <p>Kelola jadwal konseling</p>
                     <a href="/counseling" class="btn btn-light mt-2">Lihat Konseling</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Welcome -->
-        <div class="col-md-4 mb-4">
-            <div class="card text-dark bg-warning card-hover">
-                <div class="card-body">
-                    <h5 class="card-title">👋 Selamat Datang</h5>
-
-                    @auth
-                    <p>{{ auth()->user()->name }}</p>
-                    @else
-                    <p>Guest</p>
-                    @endauth
-
-                    <a href="/" class="btn btn-dark mt-2">Home</a>
                 </div>
             </div>
         </div>
