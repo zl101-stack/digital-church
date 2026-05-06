@@ -3,411 +3,200 @@
 @section('content')
 
 <style>
-    /* -----------------------------------------------------------
-       1. CORE LAYOUT & RESET
-    ----------------------------------------------------------- */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        background: #020617;
-        background: radial-gradient(circle at top right, #1e1b4b 0%, #020617 60%, #000000 100%);
-        color: white;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
-    .topbar {
-        width: 100%;
-        height: 70px;
-        padding: 0 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .brand {
-        font-size: 20px;
-        font-weight: 800;
-        background: linear-gradient(to right, #38bdf8, #818cf8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .profile-box {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 8px 18px;
-        border-radius: 12px;
-        font-size: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .wrapper {
-        display: flex;
-        width: 100%;
-        min-height: calc(100vh - 70px);
-    }
-
-    /* -----------------------------------------------------------
-       2. SIDEBAR STYLING
-    ----------------------------------------------------------- */
-    .sidebar {
-        width: 260px;
-        flex-shrink: 0;
-        padding: 30px 15px;
-        background: rgba(2, 6, 23, 0.4);
-        border-right: 1px solid rgba(255, 255, 255, 0.03);
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sidebar a {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        margin-bottom: 6px;
-        color: #94a3b8;
-        border-radius: 12px;
-        text-decoration: none;
-        transition: 0.3s;
-        font-weight: 500;
-    }
-
-    .sidebar a:hover {
-        background: rgba(255, 255, 255, 0.03);
-        color: white;
-        transform: translateX(4px);
-    }
-
-    .sidebar a.active {
-        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-        color: white;
-        box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
-    }
-
-    .logout {
-        margin-top: 20px;
-        background: rgba(239, 68, 68, 0.05) !important;
-        color: #f87171 !important;
-        border: 1px solid rgba(239, 68, 68, 0.1);
-    }
-
-    /* -----------------------------------------------------------
-       3. CONTENT AREA & HERO
-    ----------------------------------------------------------- */
-    .content {
-        flex: 1;
-        padding: 30px;
-        /* Sedikit dikurangi agar grid lebih luas */
-        width: 100%;
-    }
-
-    .hero {
-        background: linear-gradient(to bottom, rgba(2, 6, 23, 0.2), rgba(2, 6, 23, 0.9)),url('{{ asset('gereja.png') }}');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        border-radius: 28px;
-        margin-bottom: 40px;
-        min-height: 300px;
+    .hero-banner {
+        background: linear-gradient(to bottom, rgba(2,6,23,0.1), rgba(2,6,23,0.85)),
+                    url('{{ asset('gereja.png') }}') center/cover no-repeat;
+        border-radius: 20px;
+        min-height: 260px;
         display: flex;
         align-items: flex-end;
-        padding: 40px;
+        padding: 32px;
+        margin-bottom: 28px;
         position: relative;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
     }
-
-    .hero-content {
-        position: relative;
-        z-index: 10;
-    }
-
-    .hero-content h2 {
-        font-size: 32px;
-        font-weight: 800;
-        margin-bottom: 8px;
-    }
-
-    .hero-content p {
-        color: #cbd5e1;
-        max-width: 600px;
-        font-size: 15px;
-    }
-
-    /* -----------------------------------------------------------
-       4. STATS & SECTION HEADER
-    ----------------------------------------------------------- */
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .section-header h4 {
-        font-weight: 700;
-        color: #f8fafc;
-        font-size: 18px;
-    }
-
-    .stats-card {
-        background: rgba(30, 41, 59, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 20px;
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(99,102,241,0.15), transparent);
         border-radius: 20px;
+    }
+    .hero-text { position: relative; z-index: 1; }
+    .hero-text h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .hero-text p  { font-size: 14px; color: #cbd5e1; }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: 14px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .stat-icon {
+        width: 48px; height: 48px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    .stat-card .val { font-size: 20px; font-weight: 800; }
+    .stat-card .lbl { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .section-title a { font-size: 13px; color: #38bdf8; text-decoration: none; font-weight: 500; }
+
+    .jadwal-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: 14px;
+        padding: 18px;
+        transition: 0.2s;
         height: 100%;
     }
-
-    .stats-card small {
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 11px;
+    .jadwal-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(99,102,241,0.15);
     }
-
-    .stats-card h3 {
-        font-size: 22px;
-        margin-top: 5px;
-        font-weight: 800;
-        color: #fff;
-    }
-
-    /* -----------------------------------------------------------
-       5. JADWAL CARDS (FIX 3 KOLOM KE SAMPING)
-    ----------------------------------------------------------- */
-    .schedule-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        /* PAKSA 3 KOLOM */
-        gap: 20px;
-        margin-bottom: 45px;
-    }
-
-    .card-jadwal {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 24px;
-        padding: 20px;
-        transition: 0.3s;
-    }
-
-    .card-jadwal:hover {
-        background: rgba(255, 255, 255, 0.05);
-        transform: translateY(-5px);
-        border-color: #4f46e5;
-    }
-
-    .date-badge {
-        background: #4f46e5;
-        color: white;
-        padding: 5px 12px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 700;
+    .jadwal-card .date-chip {
         display: inline-block;
-        margin-bottom: 15px;
-    }
-
-    .card-jadwal h5 {
-        font-size: 18px;
-        margin-bottom: 8px;
+        background: rgba(99,102,241,0.15);
+        color: #a5b4fc;
+        border: 1px solid rgba(99,102,241,0.25);
+        border-radius: 8px;
+        padding: 3px 10px;
+        font-size: 11px;
         font-weight: 700;
-        color: #fff;
+        margin-bottom: 12px;
     }
+    .jadwal-card h5 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .jadwal-card .meta { font-size: 12px; color: var(--text-2); display: flex; align-items: center; gap: 6px; margin-top: 5px; }
 
-    .card-jadwal p {
-        font-size: 13px;
-        color: #94a3b8;
-        line-height: 1.5;
-        margin-bottom: 15px;
-    }
-
-    .info-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12px;
-        color: #cbd5e1;
-        margin-top: 5px;
-    }
-
-    /* -----------------------------------------------------------
-       6. QUICK MENU
-    ----------------------------------------------------------- */
-    .menu-card {
-        background: rgba(30, 41, 59, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 25px 20px;
-        border-radius: 20px;
+    .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .menu-item {
+        background: var(--bg-card);
+        border: 1px solid var(--border-md);
+        border-radius: 14px;
+        padding: 20px 16px;
         text-align: center;
-        transition: 0.3s;
-    }
-
-    .btn-modern {
-        display: block;
-        padding: 10px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 700;
         text-decoration: none;
-        margin-top: 15px;
-        font-size: 13px;
+        color: var(--text-1);
+        transition: 0.2s;
+        display: block;
     }
-
-    .btn-blue {
-        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    .menu-item:hover { transform: translateY(-3px); color: var(--text-1); }
+    .menu-item .menu-icon {
+        width: 52px; height: 52px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px;
+        margin: 0 auto 12px;
     }
-
-    .btn-green {
-        background: linear-gradient(135deg, #10b981, #059669);
-    }
-
-    .btn-yellow {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-    }
-
-    .btn-purple {
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 1200px) {
-        .schedule-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
+    .menu-item .menu-label { font-size: 13px; font-weight: 600; }
+    .menu-item .menu-sub   { font-size: 11px; color: var(--text-2); margin-top: 3px; }
 
     @media (max-width: 768px) {
-        .schedule-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .hero {
-            padding: 30px;
-            min-height: 250px;
-        }
-
-        .hero-content h2 {
-            font-size: 24px;
-        }
-    }
-
-    .row {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        .menu-grid { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
 
-<div class="topbar">
-    <div class="brand">⛪ Digital Church</div>
-    <div class="profile-box">👤 {{ auth()->user()->name }}</div>
+{{-- HERO --}}
+<div class="hero-banner">
+    <div class="hero-text">
+        <h2>Shalom, {{ auth()->user()->name }} 👋</h2>
+        <p>Tetap terhubung dengan pelayanan dan pertumbuhan imanmu setiap hari ✨</p>
+    </div>
 </div>
 
-<div class="wrapper">
-    <div class="sidebar">
-        <a href="{{ route('user.home') }}" class="active">🏠 Dashboard</a>
-        <a href="{{ route('user.services') }}">📅 Jadwal</a>
-        <a href="{{ route('user.pelayanan') }}">🙌 Pelayanan</a>
-        <a href="{{ route('user.donation') }}">💰 Donasi</a>
-        <a href="{{ route('user.counseling') }}">🧠 Konseling</a>
-        <a href="/auto-logout" class="logout">🚪 Logout</a>
-    </div>
-
-    <div class="content">
-        <div class="hero">
-            <div class="hero-content">
-                <h2>Shalom, {{ auth()->user()->name }} 👋</h2>
-                <p>Tetap terhubung dengan pelayanan dan pertumbuhan imanmu setiap hari ✨</p>
-            </div>
-        </div>
-
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <small>Jadwal Minggu Ini</small>
-                    <h3>{{ $totalServices }} Acara</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <small>Status Donasi</small>
-                    <h3 style="color: #10b981;">Active</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <small>Pendaftaran</small>
-                    <h3 style="color: #38bdf8;">Open</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <h4>📅 Jadwal Ibadah Mendatang</h4>
-            <a href="{{ route('user.services') }}" style="color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600;">Lihat Semua →</a>
-        </div>
-
-        <div class="schedule-grid">
-            @forelse($services as $service)
-            <div class="card-jadwal">
-                <div class="date-badge">{{ \Carbon\Carbon::parse($service->date)->translatedFormat('d M Y') }}</div>
-                <h5>{{ $service->title }}</h5>
-                <p>{{ Str::limit($service->description, 60) }}</p>
-                <div class="info-row"><span>🕒</span> {{ $service->time }} WIB</div>
-                <div class="info-row"><span>📍</span> {{ $service->location }}</div>
-            </div>
-            @empty
-            <div style="grid-column: span 3; text-align: center; padding: 40px; background: rgba(255,255,255,0.02); border-radius: 20px;">
-                <p class="text-muted">Belum ada jadwal terbaru.</p>
-            </div>
-            @endforelse
-        </div>
-
-        <div class="section-header">
-            <h4>Layanan Digital</h4>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="menu-card">
-                    <h5>Donasi</h5>
-                    <a href="{{ route('user.donation') }}" class="btn-modern btn-green">Support</a>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="menu-card">
-                    <h5>Pelayanan</h5>
-                    <a href="{{ route('user.pelayanan') }}" class="btn-modern btn-yellow">Join Now</a>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="menu-card">
-                    <h5>Konseling</h5>
-                    <a href="{{ route('user.counseling') }}" class="btn-modern btn-purple">Talk to Us</a>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="menu-card">
-                    <h5>Pusat Bantuan</h5>
-                    <a href="https://wa.me/6281234567890?text=Shalom%20Admin,%20saya%20butuh%20bantuan%20terkait%20layanan%20Digital%20Church"
-                        target="_blank"
-                        class="btn-modern btn-blue">
-                        Help Center
-                    </a>
-                </div>
+{{-- STATS --}}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(99,102,241,0.15);">📅</div>
+            <div>
+                <div class="val">{{ $totalServices }}</div>
+                <div class="lbl">Jadwal Tersedia</div>
             </div>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(34,197,94,0.15);">💖</div>
+            <div>
+                <div class="val" style="color:#86efac;">Aktif</div>
+                <div class="lbl">Status Donasi</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(56,189,248,0.15);">🙌</div>
+            <div>
+                <div class="val" style="color:#7dd3fc;">Open</div>
+                <div class="lbl">Pendaftaran Pelayanan</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- JADWAL --}}
+<div class="section-title">
+    <span>📅 Jadwal Ibadah Mendatang</span>
+    <a href="{{ route('user.services') }}">Lihat Semua →</a>
+</div>
+<div class="row g-3 mb-5">
+    @forelse($services as $service)
+    <div class="col-md-4">
+        <div class="jadwal-card">
+            <div class="date-chip">{{ \Carbon\Carbon::parse($service->date)->translatedFormat('d M Y') }}</div>
+            <h5>{{ $service->title }}</h5>
+            <div class="meta">🕒 {{ $service->time }} WIB</div>
+            <div class="meta">📍 {{ $service->location }}</div>
+        </div>
+    </div>
+    @empty
+    <div class="col-12">
+        <div class="u-card p-5 text-center" style="color:var(--text-3);">
+            <div style="font-size:40px;opacity:0.3;margin-bottom:10px;">📅</div>
+            <p>Belum ada jadwal terbaru.</p>
+        </div>
+    </div>
+    @endforelse
+</div>
+
+{{-- QUICK MENU --}}
+<div class="section-title"><span>Layanan Digital</span></div>
+<div class="menu-grid">
+    <a href="{{ route('user.donation') }}" class="menu-item" style="border-color:rgba(34,197,94,0.2);">
+        <div class="menu-icon" style="background:rgba(34,197,94,0.12);">💖</div>
+        <div class="menu-label">Donasi</div>
+        <div class="menu-sub">Berikan persembahan</div>
+    </a>
+    <a href="{{ route('user.pelayanan') }}" class="menu-item" style="border-color:rgba(245,158,11,0.2);">
+        <div class="menu-icon" style="background:rgba(245,158,11,0.12);">🙌</div>
+        <div class="menu-label">Pelayanan</div>
+        <div class="menu-sub">Daftar tim pelayanan</div>
+    </a>
+    <a href="{{ route('user.counseling') }}" class="menu-item" style="border-color:rgba(139,92,246,0.2);">
+        <div class="menu-icon" style="background:rgba(139,92,246,0.12);">🧠</div>
+        <div class="menu-label">Konseling</div>
+        <div class="menu-sub">Booking sesi konseling</div>
+    </a>
+    <a href="https://wa.me/6281234567890" target="_blank" class="menu-item" style="border-color:rgba(56,189,248,0.2);">
+        <div class="menu-icon" style="background:rgba(56,189,248,0.12);">💬</div>
+        <div class="menu-label">Bantuan</div>
+        <div class="menu-sub">Hubungi admin</div>
+    </a>
 </div>
 
 @endsection

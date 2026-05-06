@@ -83,6 +83,12 @@
                         <a class="nav-link" href="/counseling">Konseling</a>
                     </li>
 
+                    @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('pastors.index') }}">⛪ Pastor</a>
+                    </li>
+                    @endif
+
                     <li class="nav-item">
                         <span class="nav-link text-warning">
                             👤 {{ auth()->user()->name ?? 'Admin' }}

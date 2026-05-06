@@ -3,19 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donation;
+use App\Exports\DonationsExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DonationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $donations = Donation::with('user')->get();
-        $total = Donation::sum('amount');
+        $query = Donation::with('user')->orderBy('date', 'desc');
 
-        return view('donations.index', compact('donations', 'total'));
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        if ($startDate) {
+            $query->whereDate('date', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('date', '<=', $endDate);
+        }
+
+        $donations = $query->get();
+        $total     = $donations->sum('amount');
+
+        return view('donations.index', compact('donations', 'total', 'startDate', 'endDate'));
+    }
+
+    /**
+     * Export donasi ke Excel (superadmin only)
+     */
+    public function export(Request $request)
+    {
+        abort_unless(auth()->user()->role === 'superadmin', 403);
+
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        $filename = 'donasi';
+        if ($startDate || $endDate) {
+            $filename .= '_' . ($startDate ?? 'awal') . '_sd_' . ($endDate ?? 'akhir');
+        }
+        $filename .= '.xlsx';
+
+        return Excel::download(new DonationsExport($startDate, $endDate), $filename);
     }
 
     /**
@@ -99,20 +133,26 @@ class DonationController extends Controller
     public function userStore(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1000',
-            'note' => 'nullable|max:255',
+            'amount'         => 'required|numeric|min:1000',
+            'note'           => 'nullable|max:255',
+            'payment_method' => 'required|in:manual,qris',
         ]);
 
         $isAnonymous = $request->has('is_anonymous');
 
         Donation::create([
-            'user_id' => $isAnonymous ? null : auth()->id(), 
-            'amount' => $request->amount,
-            'note' => $request->note,
-            'date' => now(),
-            'is_anonymous' => $isAnonymous,
+            'user_id'        => $isAnonymous ? null : auth()->id(),
+            'amount'         => $request->amount,
+            'note'           => $request->note,
+            'date'           => now(),
+            'is_anonymous'   => $isAnonymous,
+            'payment_method' => $request->payment_method,
         ]);
 
-        return redirect()->back()->with('success', 'Terima kasih, donasi berhasil dikirim.');
+        $msg = $request->payment_method === 'qris'
+            ? 'Terima kasih! Donasi via QRIS berhasil dicatat. Tuhan memberkati 🙏'
+            : 'Terima kasih, donasi berhasil dikirim. Tuhan memberkati 🙏';
+
+        return redirect()->back()->with('success', $msg);
     }
 }

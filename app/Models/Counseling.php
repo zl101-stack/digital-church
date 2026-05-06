@@ -13,7 +13,16 @@ class Counseling extends Model
         'time',
         'duration',
         'is_anonymous',
-        'note'
+        'note',
+        'nickname',
+        'is_slot',
+        'booked_by',
+        'booking_note',
+    ];
+
+    protected $casts = [
+        'is_slot'      => 'boolean',
+        'is_anonymous' => 'boolean',
     ];
 
     public function pastor()
@@ -24,5 +33,16 @@ class Counseling extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bookedByUser()
+    {
+        return $this->belongsTo(User::class, 'booked_by');
+    }
+
+    /** Apakah slot ini sudah diambil user */
+    public function isBooked(): bool
+    {
+        return $this->is_slot && !is_null($this->booked_by);
     }
 }

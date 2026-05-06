@@ -8,6 +8,7 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\ServiceRegistrationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PastorController;
 
 use App\Models\Service;
 use App\Models\Donation;
@@ -44,7 +45,7 @@ Route::middleware('auth')->get('/dashboard', function () {
    USER
 =================================== */
 
-Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
+Route::middleware(['auth', 'session.timeout', 'role:user,admin,superadmin'])->group(function () {
 
     Route::get('/user/home', function () {
         return view('user.home', [
@@ -71,8 +72,11 @@ Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
     Route::get('/user/counseling', [CounselingController::class, 'userView'])
         ->name('user.counseling');
 
-    Route::post('/user/counseling', [CounselingController::class, 'store'])
+    Route::post('/user/counseling', [CounselingController::class, 'userStore'])
         ->name('user.counseling.store');
+
+    Route::delete('/user/counseling/{id}/cancel', [CounselingController::class, 'userCancel'])
+        ->name('user.counseling.cancel');
 });
 
 
@@ -80,8 +84,7 @@ Route::middleware(['auth', 'role:user,admin,superadmin'])->group(function () {
    ADMIN
 =================================== */
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-
+Route::middleware(['auth', 'session.timeout', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard', [
             'totalServices' => Service::count(),
@@ -98,7 +101,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
    SUPERADMIN
 =================================== */
 
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
+Route::middleware(['auth', 'session.timeout', 'role:superadmin'])->group(function () {
 
     Route::get('/superadmin/dashboard', function () {
         return view('superadmin.users.dashboard', [
@@ -113,15 +116,22 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
    ADMIN + SUPERADMIN
 =================================== */
 
-Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
+Route::middleware(['auth', 'session.timeout', 'role:admin,superadmin'])->group(function () {
 
     Route::resource('services', ServiceController::class);
 
     Route::resource('counseling', CounselingController::class);
 
+    /* Route export harus sebelum resource agar tidak tertangkap sebagai {donation} */
+    Route::get('/donations/export', [DonationController::class, 'export'])
+        ->name('donations.export')
+        ->middleware('role:superadmin');
+
     Route::resource('donations', DonationController::class);
 
     Route::resource('service-registrations', ServiceRegistrationController::class);
+
+    Route::resource('pastors', PastorController::class)->except(['show', 'create']);
 });
 
 
@@ -130,7 +140,7 @@ Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
 =================================== */
 
 /* Admin */
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'session.timeout', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -139,7 +149,7 @@ Route::middleware(['auth', 'role:admin'])
     });
 
 /* Superadmin */
-Route::middleware(['auth', 'role:superadmin'])
+Route::middleware(['auth', 'session.timeout', 'role:superadmin'])
     ->prefix('superadmin')
     ->name('superadmin.')
     ->group(function () {
